@@ -54,10 +54,14 @@ void LogicalCameraPlugin::OnUpdate(){
     for(int i=0; i < number_of_models; i++){
         sm_simulation_robot::Model model_msg;
 
+        if (logical_image.model(i).name() == "ipa-apartment" || logical_image.model(i).name() == "ground_plane"
+            || logical_image.model(i).name() == "")
+          continue;
+
         rendering::VisualPtr visual = scene->GetVisual(logical_image.model(i).name());
 
         if (!visual)
-          break;
+          continue;
 
         math::Box bounding_box = visual->GetBoundingBox();
 
