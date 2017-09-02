@@ -5,7 +5,9 @@
 
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/gazebo.hh>
+#include <gazebo/rendering/rendering.hh>
 #include <gazebo/sensors/sensors.hh>
+#include <gazebo/math/gzmath.hh>
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
@@ -26,7 +28,7 @@ private:
     virtual void OnUpdate();
 
     sensors::LogicalCameraSensorPtr parentSensor;
-
+    gazebo::rendering::ScenePtr scene;
     event::ConnectionPtr updateConnection;
 };
 }

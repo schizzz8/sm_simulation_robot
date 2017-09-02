@@ -37,6 +37,9 @@ void LogicalCameraPlugin::OnUpdate(){
     sm_simulation_robot::LogicalCameraImage msg;
 
     logical_image = this->parentSensor->Image();
+    gazebo::rendering::ScenePtr scene = gazebo::rendering::get_scene();
+    if (!scene || !scene->Initialized())
+      return;
 
     msg.pose.position.x = logical_image.pose().position().x();
     msg.pose.position.y = logical_image.pose().position().y();
@@ -50,6 +53,14 @@ void LogicalCameraPlugin::OnUpdate(){
     int number_of_models = logical_image.model_size();
     for(int i=0; i < number_of_models; i++){
         sm_simulation_robot::Model model_msg;
+
+        rendering::VisualPtr visual = scene->GetVisual(logical_image.model(i).name());
+
+        if (!visual)
+          break;
+
+        math::Box bounding_box = visual->GetBoundingBox();
+
         model_msg.pose.position.x = logical_image.model(i).pose().position().x();
         model_msg.pose.position.y = logical_image.model(i).pose().position().y();
         model_msg.pose.position.z = logical_image.model(i).pose().position().z();
@@ -58,6 +69,10 @@ void LogicalCameraPlugin::OnUpdate(){
         model_msg.pose.orientation.y = logical_image.model(i).pose().orientation().y();
         model_msg.pose.orientation.z = logical_image.model(i).pose().orientation().z();
         model_msg.pose.orientation.w = logical_image.model(i).pose().orientation().w();
+
+        model_msg.size.x = bounding_box.GetXLength();
+        model_msg.size.y = bounding_box.GetYLength();
+        model_msg.size.z = bounding_box.GetZLength();
 
         model_msg.type = logical_image.model(i).name();
 
