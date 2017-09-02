@@ -28,7 +28,6 @@ private:
     virtual void OnUpdate();
 
     sensors::LogicalCameraSensorPtr parentSensor;
-    gazebo::rendering::ScenePtr scene;
     event::ConnectionPtr updateConnection;
 };
 }
